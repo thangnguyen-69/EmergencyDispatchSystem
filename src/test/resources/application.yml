@@ -1,0 +1,54 @@
+# spring.config.name: test
+# spring.profiles.active: local
+# spring.sql.init.mode: never
+spring:
+  # datasource:
+  #   type: com.zaxxer.hikari.HikariDataSource
+  #   hikari:
+  #     connection-test-query: SELECT 1
+  #     connection-timeout: 30000
+  #     idle-timeout: 30000
+  #     max-lifetime: 2000000
+  #     maximum-pool-size: 20
+  #     minimum-idle: 5
+  #     pool-name: SpringBootJPAHikariCP
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    # database-platform: org.hibernate.spatial.dialect.postgis.PostgisPG9Dialect
+    hibernate:
+      ddl-auto: create-drop
+      # hikari:
+      #   registerMbeans: true
+      # connection:
+      #   provider_class: org.hibernate.hikaricp.internal.HikariCPConnectionProvider
+    # properties:
+      # hibernate:
+        # dialect: org.hibernate.spatial.dialect.postgis.PostgisPG9Dialect
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "test"
+zonky:
+  test:
+    database:
+      postgres:
+        client:
+          datasource:
+            url: jdbc:postgresql://localhost:5432/testdb
+          properties:
+            adaptiveFetch: false
+            #contains all property u need
+            #https://github.com/pgjdbc/pgjdbc/blob/3c3e5b62349c42d9d3dfe1fe0102776d4de8c353/pgjdbc/src/main/java/org/postgresql/PGProperty.java#L1019
+            PGDBNAME: test
+            # url: jdbc:postgresql://localhost:5432/testdb
+            # database: 
+            # datasource:
+              # database: haha
+              # username: thang
+        docker:
+          image: postgis/postgis:15-3.3
+          # tmpfs:
+          #   enabled: true
+          #   options: rw,noexec,nosuid
