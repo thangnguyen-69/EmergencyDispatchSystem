@@ -1,4 +1,4 @@
-package com.n3t.dispatcher;
+package com.n3t.dispatcher.repository;
 
 import java.util.List;
 
@@ -8,6 +8,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Repository("provider")
-public interface AmbulanceProviderRepository extends JpaRepository<AmbulanceProvider, Long> {
+@Repository("providerRepository")
+public interface AmbulanceProviderRepository 
+        extends 
+        PagingAndSortingRepository<AmbulanceProvider, Long>,
+        JpaSpecificationExecutor<AmbulanceProvider>,
+        Serializable {
+
 }
