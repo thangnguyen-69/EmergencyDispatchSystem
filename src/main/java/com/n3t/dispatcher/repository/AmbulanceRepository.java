@@ -16,12 +16,14 @@ public interface AmbulanceRepository
         JpaSpecificationExecutor<Ambulance>,
         Serializable {
 
-    @Query("SELECT * FROM ambulance a WHERE a.available = true ORDER BY ST_Distance(a.location, :point) LIMIT :numOfSuggestion")
+    @Query("SELECT * FROM ambulance a WHERE a.isAvailable = true ORDER BY ST_Distance(a.location, :point) LIMIT :numOfSuggestion")
     public List<Ambulance> findNearestAvailableAmbulances(@Param("point") Geometry point, @Param("numOfSuggestion") int numOfSuggestion);
 
     @Modifying
     @Query("INSERT INTO ambulance (id, location) VALUES (:id, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography)", nativeQuery = true)
     void updateAmbulanceLocation(@Param("id") Long ambulanceId, @Param("latitude") Double latitude, @Param("longitude") Double longitude);
 
+    List<Ambulance> findByProvider(AmbulanceProvider provider);
+    
 }
 

@@ -11,7 +11,7 @@ import org.hibernate.dialect.PostgreSQLDialect;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Ambulance {
+public class Ambulance implements Serializable {
 
     @Id
     @Column(name = "id", updatable = false, nullable = false)
@@ -20,9 +20,11 @@ public class Ambulance {
     @Setter(AccessLevel.PROTECTED)
     private Long id;
 
-    // @OneToOne
-    // @JoinColumn(name = "provider_id")
-    // // @OneToOne(targetEntity = AmbulanceProvider.class, mappedBy = "provider", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "provider_id", referencedColumnName = "id", updatable = false)
+    @Getter
+    @Setter(AccessLevel.PROTECTED)
+    private AmbulanceProvider provider;
 
     @Column(name = "provider_id", columnDefinition = "TEXT", nullable = false, updatable = false)
     @Getter
@@ -34,16 +36,14 @@ public class Ambulance {
     @Setter
     private String carNumber;
 
-    @Column(name = "available", columnDefinition = "BOOLEAN DEFAULT true", nullable = false)
+    @Column(name = "is_available", columnDefinition = "BOOLEAN DEFAULT true", nullable = false)
     @Getter
     @Setter
-    private boolean available;
+    private boolean isAvailable;
 
     @Column(name="location", columnDefinition = "geography", nullable = false)
     @Getter
     @Setter
     private Geometry location;
-
-    
 
 }

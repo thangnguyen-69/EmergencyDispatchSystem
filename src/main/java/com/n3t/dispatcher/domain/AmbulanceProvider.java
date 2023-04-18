@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AmbulanceProvider {
+public class AmbulanceProvider implements Serializable {
 
     @Id
     @Column(name = "id", updatable = false, nullable = false)
@@ -18,6 +18,10 @@ public class AmbulanceProvider {
     @Setter(AccessLevel.PROTECTED)
     private Long id;
 
+    @OneToMany(mappedBy = "provider", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Getter
+    @Setter
+    private Set<Ambulance> ambulances;
 
     @Column(name = "phone", columnDefinition = "TEXT")
     @Getter
