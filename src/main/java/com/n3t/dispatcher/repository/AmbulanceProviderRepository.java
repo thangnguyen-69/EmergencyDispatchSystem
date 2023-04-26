@@ -1,18 +1,19 @@
 package com.n3t.dispatcher.repository;
 
-import java.util.List;
-
+import com.n3t.dispatcher.domain.AmbulanceProvider;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.io.Serializable;
 
 @Repository("providerRepository")
-public interface AmbulanceProviderRepository 
-        extends 
+public interface AmbulanceProviderRepository
+        extends
         PagingAndSortingRepository<AmbulanceProvider, Long>,
         JpaSpecificationExecutor<AmbulanceProvider>,
-        Serializable {
+        Serializable,
+        JpaRepository<AmbulanceProvider, Long> {
 
 }

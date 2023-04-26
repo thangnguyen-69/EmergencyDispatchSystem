@@ -1,13 +1,17 @@
 package com.n3t.dispatcher.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Table(name = "ambulance_provider")
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AmbulanceProvider implements Serializable {
 

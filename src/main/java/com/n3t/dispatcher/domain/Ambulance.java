@@ -1,15 +1,17 @@
 package com.n3t.dispatcher.domain;
 
-import org.locationtech.jts.geom.Geometry;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.dialect.PostgreSQLDialect;
+import org.locationtech.jts.geom.Geometry;
+
+import java.io.Serializable;
 
 @Entity
 @Table(name = "ambulance")
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Ambulance implements Serializable {
 
@@ -23,7 +25,7 @@ public class Ambulance implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "provider_id", referencedColumnName = "id", updatable = false)
     @Getter
-    @Setter(AccessLevel.PROTECTED)
+    @Setter
     private AmbulanceProvider provider;
 
     @Column(name = "provider_id", columnDefinition = "TEXT", nullable = false, updatable = false)
@@ -41,7 +43,7 @@ public class Ambulance implements Serializable {
     @Setter
     private boolean isAvailable;
 
-    @Column(name="location", columnDefinition = "geography", nullable = false)
+    @Column(name = "location", columnDefinition = "geography", nullable = false)
     @Getter
     @Setter
     private Geometry location;
