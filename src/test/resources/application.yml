@@ -24,7 +24,9 @@ spring:
     # properties:
       # hibernate:
         # dialect: org.hibernate.spatial.dialect.postgis.PostgisPG9Dialect
-
+application:
+  google-map:
+    apiKey: AIzaSyBSBO8X1EDGqmTz7Rz-wbqXrAIx39HWfsk
 ---
 spring:
   config:
