@@ -34,6 +34,9 @@ zonky:
   test:
     database:
       postgres:
+        # server:
+        #   properties:
+        #     port: 6942
         client:
           datasource:
             url: jdbc:postgresql://localhost:5432/testdb
@@ -42,6 +45,7 @@ zonky:
             #contains all property u need
             #https://github.com/pgjdbc/pgjdbc/blob/3c3e5b62349c42d9d3dfe1fe0102776d4de8c353/pgjdbc/src/main/java/org/postgresql/PGProperty.java#L1019
             PGDBNAME: test
+            # PGPORT: 6941
             # url: jdbc:postgresql://localhost:5432/testdb
             # database: 
             # datasource:

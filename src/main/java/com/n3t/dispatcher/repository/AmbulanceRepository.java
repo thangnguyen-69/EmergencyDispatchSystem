@@ -23,7 +23,7 @@ public interface AmbulanceRepository
         JpaRepository<Ambulance, Long> {
 
     @Query(value = "SELECT * FROM public.ambulance WHERE is_available = true ORDER BY ST_Distance(location, :point) LIMIT :numOfSuggestions", nativeQuery = true)
-    public List<Ambulance> findNearestAvailableAmbulances(@Param("point") Geometry point, @Param("numOfSuggestion") int numOfSuggestion);
+    public List<Ambulance> findNearestAvailableAmbulances(@Param("point") Geometry point, @Param("numOfSuggestions") int numOfSuggestions);
 
     @Modifying
     @Query(value = "INSERT INTO ambulance (id, location) VALUES (:id, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography)", nativeQuery = true)

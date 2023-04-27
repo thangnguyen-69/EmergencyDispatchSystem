@@ -25,12 +25,15 @@ public class AmbulanceService {
     @Autowired
     private AmbulanceProviderRepository providerRepository;
 
-    public Ambulance registerAmbulance(Long providerId, String carNumber) {
+    public Ambulance registerAmbulance(Long providerId, String carNumber,Double latitude, Double longitude) {
         AmbulanceProvider provider = this.providerRepository.findById(providerId)
                 .orElseThrow(() -> new NoSuchElementException("Ambulance provider with id " + providerId + " not found"));
         Ambulance ambulance = new Ambulance();
         ambulance.setProvider(provider);
         ambulance.setCarNumber(carNumber);
+        ambulance.setAvailable(true);
+        Geometry newLocation = convertToPoint(latitude, longitude);
+        ambulance.setLocation(newLocation);
         return this.ambulanceRepository.save(ambulance);
     }
 

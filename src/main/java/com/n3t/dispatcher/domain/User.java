@@ -1,5 +1,9 @@
 package com.n3t.dispatcher.domain;
 
+import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -4,8 +4,12 @@ import com.n3t.dispatcher.DemoApplication;
 import com.n3t.dispatcher.domain.Ambulance;
 import com.n3t.dispatcher.domain.AmbulanceProvider;
 import com.n3t.dispatcher.service.AmbulanceService;
+import com.n3t.dispatcher.service.GoogleMapService;
+
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider;
+import jakarta.transaction.Transactional;
+
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,21 +33,29 @@ class DispatcherApplicationTests {
     private AmbulanceService ambulanceService;
 
     @Test
+    @Transactional
     void shouldBeAbleToGetUpdatedStatusOfAmbulance() {
         AmbulanceProvider provider = this.ambulanceService.registerProvider("toan thang", "thangvip5432@gmail.com", "0231230123");
-        Ambulance amb1 = this.ambulanceService.registerAmbulance(provider.getId(), "29C-12345");
-        Ambulance amb2 = this.ambulanceService.registerAmbulance(provider.getId(), "29C-12346");
-        Ambulance amb3 = this.ambulanceService.registerAmbulance(provider.getId(), "29C-12347");
-        Ambulance amb4 = this.ambulanceService.registerAmbulance(provider.getId(), "29C-12348");
+        Ambulance amb1 = this.ambulanceService.registerAmbulance(provider.getId(), "29C-12345",10.404864, 107.114446);
+        Ambulance amb2 = this.ambulanceService.registerAmbulance(provider.getId(), "29C-12346",10.405163, 107.115757);
+        Ambulance amb3 = this.ambulanceService.registerAmbulance(provider.getId(), "29C-12347",10.407064, 107.113640);
+        Ambulance amb4 = this.ambulanceService.registerAmbulance(provider.getId(), "29C-12348",10.04, 127.012);
 
-        this.ambulanceService.updateAmbulanceLocation(amb1.getId(), 10.404864, 107.114446);
-        this.ambulanceService.updateAmbulanceLocation(amb2.getId(), 10.405163, 107.115757);
-        this.ambulanceService.updateAmbulanceLocation(amb3.getId(), 10.407064, 107.113640);
-        this.ambulanceService.updateAmbulanceLocation(amb4.getId(), 10.04, 127.012);
-        List<Ambulance> listAmb = this.ambulanceService.getNearestAvailableAmbulances(10.404768, 107.114562, 2);
-        System.out.println(listAmb);
+        // this.ambulanceService.updateAmbulanceLocation(amb1.getId(), 
+        // this.ambulanceService.updateAmbulanceLocation(amb2.getId(), 
+        // this.ambulanceService.updateAmbulanceLocation(amb3.getId(), 
+        // this.ambulanceService.updateAmbulanceLocation(amb4.getId(), 
+        List<Ambulance> listAmb = this.ambulanceService.getNearestAvailableAmbulances(10.404768, 107.114562, 3);
+        // this will actually failed, because session will be closed after the line above, so we need to add @Transactional to keep the sesion open throughout the fucking function.
+        System.out.println(listAmb.get(0).getProvider());
     }
 
+    @Autowired
+    private GoogleMapService googleMapService;
+    @Test
+    void shouldBeAbleToCalculateETA(){
+        // this.googleMapService.calculateETA();
+    }
     @Test
     void shouldBeAbleToAddStations() {
     }
