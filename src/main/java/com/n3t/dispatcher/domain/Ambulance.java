@@ -28,11 +28,6 @@ public class Ambulance implements Serializable {
     @Setter
     private AmbulanceProvider provider;
 
-    @Column(name = "provider_id", columnDefinition = "TEXT", nullable = false, updatable = false)
-    @Getter
-    @Setter(AccessLevel.PROTECTED)
-    private String providerId;
-
     @Column(name = "car_number", columnDefinition = "TEXT")
     @Getter
     @Setter
