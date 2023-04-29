@@ -1,11 +1,12 @@
 package com.n3t.dispatcher.domain;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.*;
 import lombok.*;
+import org.locationtech.jts.geom.Geometry;
+
+import java.io.Serializable;
+
 
 @Entity
 @Table(name = "ambulance_user")
@@ -26,4 +27,19 @@ public class User implements Serializable {
     @Getter
     @Setter
     private String userName;
+
+    @Column(name = "address", columnDefinition = "TEXT")
+    @Getter
+    @Setter
+    private String address;
+
+    @Column(name = "phone_number", columnDefinition = "TEXT")
+    @Getter
+    @Setter
+    private String phoneNumber;
+
+    @Column(name = "location", columnDefinition = "geography", nullable = false)
+    @Getter
+    @Setter
+    private Geometry location;
 }
