@@ -4,6 +4,7 @@ import com.n3t.dispatcher.DemoApplication;
 import com.n3t.dispatcher.domain.Ambulance;
 import com.n3t.dispatcher.domain.AmbulanceProvider;
 import com.n3t.dispatcher.domain.GeoLocation;
+import com.n3t.dispatcher.domain.User;
 import com.n3t.dispatcher.service.AmbulanceService;
 import com.n3t.dispatcher.service.GoogleMapService;
 
@@ -20,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = DemoApplication.class)
@@ -64,9 +66,16 @@ class DispatcherApplicationTests {
         System.out.println("time is " + a);
         System.out.println("multiple time is " + haha);
     }
+    @Test
+    void userCanBookAnAmbulance(){
+        User a = User.builder().userName("haha").build();
+        a.setCurrentLocation(Optional.of(GeoLocation.fromLatLngToGeometryPoint(10,104)));
+        this.ambulanceService.dispatchAmbulanceToUser(a);
+    }
 
     @Test
     void shouldBeAbleToAddStations() {
+
     }
 
     @Test

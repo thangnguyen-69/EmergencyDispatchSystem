@@ -20,7 +20,7 @@ public class Ambulance implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     @Setter(AccessLevel.PROTECTED)
-    private Long id;
+    private long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "provider_id", referencedColumnName = "id", updatable = false)

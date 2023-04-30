@@ -1,6 +1,7 @@
 package com.n3t.dispatcher.domain;
 
 import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
@@ -13,9 +14,9 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class GeoLocation {
-    public Double latitude;
-    public Double longitude;
-    public Point convertToPoint() {
+    public double latitude;
+    public double longitude;
+    public Point toPoint() {
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
         Coordinate coordinate = new Coordinate(latitude, longitude);
         return geometryFactory.createPoint(coordinate);
@@ -25,5 +26,12 @@ public class GeoLocation {
                 .setLocation(Location.newBuilder().setLatLng(LatLng.newBuilder().setLatitude(latitude).setLongitude(longitude)))
                 .build();
     }
-
+    public static GeoLocation fromGeometry(Geometry geom){
+            return new GeoLocation(geom.getCoordinate().x, geom.getCoordinate().y);
+    }
+    public static Point fromLatLngToGeometryPoint(double latitude, double longitude) {
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
+        Coordinate coordinate = new Coordinate(latitude, longitude);
+        return geometryFactory.createPoint(coordinate);
+    }
 }
