@@ -42,5 +42,4 @@ public class Ambulance implements Serializable {
     @Getter
     @Setter
     private Geometry location;
-
 }

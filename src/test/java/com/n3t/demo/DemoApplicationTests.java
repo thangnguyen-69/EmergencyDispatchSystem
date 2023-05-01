@@ -69,8 +69,8 @@ class DispatcherApplicationTests {
     @Test
     void userCanBookAnAmbulance(){
         User a = User.builder().userName("haha").build();
-        a.setCurrentLocation(Optional.of(GeoLocation.fromLatLngToGeometryPoint(10,104)));
-        this.ambulanceService.dispatchAmbulanceToUser(a);
+        // a.setCurrentLocation(Optional.of(GeoLocation.fromLatLngToGeometryPoint(10,104)));
+        this.ambulanceService.dispatchAmbulanceToUser(a, new GeoLocation(10, 105));
     }
 
     @Test

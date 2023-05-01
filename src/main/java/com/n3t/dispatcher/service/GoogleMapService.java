@@ -5,7 +5,10 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.springframework.data.util.Pair;
+import com.n3t.dispatcher.domain.ETA;
+import com.n3t.dispatcher.repository.EtaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.google.maps.routing.v2.RouteMatrixElement;
@@ -16,6 +19,7 @@ import com.n3t.dispatcher.domain.RouteInfoWithAmbulance;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -24,6 +28,9 @@ import lombok.Setter;
 public class GoogleMapService implements IMapService {
 
     private RoutesClient client;
+
+    @Autowired
+    private EtaRepository etaRepository;
 
     @Override
     public Long calculateETAinSeconds(GeoLocation srcLocation, GeoLocation dstLocation) {
@@ -60,4 +67,10 @@ public class GoogleMapService implements IMapService {
         }
         return DistanceAndETAs;
     }
+
+    @Transactional(readOnly = true)
+    public List<ETA> query(Specification<ETA> specification) {
+        return this.etaRepository.findAll(specification);
+    }
+
 }

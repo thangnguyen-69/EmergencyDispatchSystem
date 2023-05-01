@@ -2,6 +2,7 @@ package com.n3t.dispatcher.service;
 
 import com.n3t.dispatcher.domain.Ambulance;
 import com.n3t.dispatcher.domain.AmbulanceProvider;
+import com.n3t.dispatcher.domain.Emergency;
 import com.n3t.dispatcher.domain.GeoLocation;
 import com.n3t.dispatcher.domain.RouteInfoWithAmbulance;
 import com.n3t.dispatcher.domain.User;
@@ -67,16 +68,14 @@ public class AmbulanceService {
     }
 
     @Transactional
-    public Optional<Ambulance> dispatchAmbulanceToUser(User user) {
-        Geometry location = user.getCurrentLocation()
-                .orElseThrow(() -> new IllegalArgumentException("why user doesnt have location?"));
-        List<Ambulance> ambulances = this.ambulanceRepository.findNearestAvailableAmbulances(location, 10);
+    public Optional<Ambulance> dispatchAmbulanceToUser(User user, GeoLocation patientLocation) {
+        List<Ambulance> ambulances = this.ambulanceRepository.findNearestAvailableAmbulances(patientLocation.toPoint(),
+                10);
         List<GeoLocation> ambLocs = ambulances.stream().map((ambulance) -> {
             return GeoLocation.fromGeometry(ambulance.getLocation());
         }).toList();
         List<RouteInfoWithAmbulance> distanceAndETAs = googleMapService
-                .calculateDistanceInMetersAndETAinSecondsFromAllAmbulancesToOnePatient(ambLocs,
-                        GeoLocation.fromGeometry(location));
+                .calculateDistanceInMetersAndETAinSecondsFromAllAmbulancesToOnePatient(ambLocs, patientLocation);
         for (int i = 0; i < distanceAndETAs.size(); i++) {
             distanceAndETAs.get(i).setAmbulance(ambulances.get(i));
         }
@@ -92,7 +91,13 @@ public class AmbulanceService {
         for (RouteInfoWithAmbulance routeInfoWithAmbulance : distanceAndETAs) {
             try {
                 Ambulance chosenAmb = reserveAmbulance(routeInfoWithAmbulance.getAmbulance().getId());
+                Emergency emergency = Emergency.builder().ambulance(chosenAmb).user(user)
+                        .hospitalLocation(GeoLocation.fromLatLngToGeometryPoint(10, 104))
+                        .patientLocation(patientLocation.toPoint())
+                        .etas(null)
+                        .build();
                 return Optional.of(chosenAmb);
+                // emergency.setHospitalLocation(null);
                 // create a transit between user and ambulance
                 // we dispatch the Ambulance then.
             } catch (PessimisticLockException e) {
@@ -104,14 +109,11 @@ public class AmbulanceService {
 
     @Transactional
     private Ambulance reserveAmbulance(long ambulanceId) {
-        // Ambulance amb = entityManager.find(Ambulance.class, ambulanceId,
-        // LockModeType.PESSIMISTIC_WRITE);
         Ambulance amb = ambulanceRepository.getAndLockAmbulance(ambulanceId);
         amb.setAvailable(false);
         // create a user transit object!
         amb = ambulanceRepository.save(amb);
-        // entityManager.persist(amb);
-        // entityManager.flush();
+
         return amb;
     }
 
