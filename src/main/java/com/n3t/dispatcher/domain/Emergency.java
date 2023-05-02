@@ -6,7 +6,6 @@ import lombok.*;
 import org.locationtech.jts.geom.Geometry;
 
 import java.io.Serializable;
-import java.util.Set;
 
 @Entity
 @Table(name = "emergency")
@@ -23,10 +22,9 @@ public class Emergency implements Serializable {
     @Setter(AccessLevel.PROTECTED)
     private Long id;
 
-    @OneToMany(mappedBy = "emergency", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter
     @Setter
-    private Set<ETA> etas;
+    private long etaToTarget;
 
     @OneToOne
     private User user;
@@ -47,13 +45,13 @@ public class Emergency implements Serializable {
     @Column(name = "patient_distance", columnDefinition = "DECIMAL")
     @Getter
     @Setter
-    private double patientDistance;
+    private int distanceFromAmbulanceToPatient;
 
 
     @Column(name = "hospital_distance", columnDefinition = "DECIMAL")
     @Getter
     @Setter
-    private double hospitalDistance;
+    private int distanceFromAmbulanceToHospital;
 
     @Column(name = "status", columnDefinition = "TEXT DEFAULT 'DRAFT'", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -62,7 +60,7 @@ public class Emergency implements Serializable {
     private Status status;
 
     public enum Status {
-        DRAFT,
+        ENROUTE_TO_PATIENT,
         FAILED,
         EMERGENCY_TOO_LONG,
         PICK_UP_PATIENT_SUCCESS,

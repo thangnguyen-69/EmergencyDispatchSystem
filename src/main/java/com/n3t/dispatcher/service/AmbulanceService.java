@@ -6,8 +6,10 @@ import com.n3t.dispatcher.domain.Emergency;
 import com.n3t.dispatcher.domain.GeoLocation;
 import com.n3t.dispatcher.domain.RouteInfoWithAmbulance;
 import com.n3t.dispatcher.domain.User;
+import com.n3t.dispatcher.domain.Emergency.Status;
 import com.n3t.dispatcher.repository.AmbulanceProviderRepository;
 import com.n3t.dispatcher.repository.AmbulanceRepository;
+import com.n3t.dispatcher.repository.EmergencyRepository;
 
 import jakarta.persistence.PessimisticLockException;
 import jakarta.transaction.Transactional;
@@ -36,6 +38,9 @@ public class AmbulanceService {
 
     @Autowired
     private GoogleMapService googleMapService;
+
+    @Autowired
+    private EmergencyRepository emergencyRepository;
 
     public Ambulance registerAmbulance(Long providerId, String carNumber, Double latitude, Double longitude) {
         AmbulanceProvider provider = this.providerRepository.findById(providerId).orElseThrow(
@@ -91,15 +96,19 @@ public class AmbulanceService {
         for (RouteInfoWithAmbulance routeInfoWithAmbulance : distanceAndETAs) {
             try {
                 Ambulance chosenAmb = reserveAmbulance(routeInfoWithAmbulance.getAmbulance().getId());
-                Emergency emergency = Emergency.builder().ambulance(chosenAmb).user(user)
-                        .hospitalLocation(GeoLocation.fromLatLngToGeometryPoint(10, 104))
-                        .patientLocation(patientLocation.toPoint())
-                        .etas(null)
-                        .build();
-                return Optional.of(chosenAmb);
-                // emergency.setHospitalLocation(null);
                 // create a transit between user and ambulance
                 // we dispatch the Ambulance then.
+                Emergency emergency = Emergency.builder().ambulance(chosenAmb).user(user)
+                        .hospitalLocation(GeoLocation.fromLatLngToGeometryPoint(10, 104)) // hardcode for the moment
+                        .patientLocation(patientLocation.toPoint()).status(Status.ENROUTE_TO_PATIENT)
+                        .distanceFromAmbulanceToPatient(routeInfoWithAmbulance.getDistance())
+                        .etaToTarget(routeInfoWithAmbulance.getEta())
+                        .build();
+                // start the eta counting job
+                // or do multiple eta?
+                // job will try to find all enroute emergency and check eta
+                emergencyRepository.save(emergency);
+                return Optional.of(chosenAmb);
             } catch (PessimisticLockException e) {
                 logger.info("seems like sb booked that ambulance, switch to the next closest available amb");
             }

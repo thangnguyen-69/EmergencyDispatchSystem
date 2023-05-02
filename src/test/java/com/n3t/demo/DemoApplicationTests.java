@@ -5,8 +5,10 @@ import com.n3t.dispatcher.domain.Ambulance;
 import com.n3t.dispatcher.domain.AmbulanceProvider;
 import com.n3t.dispatcher.domain.GeoLocation;
 import com.n3t.dispatcher.domain.User;
+import com.n3t.dispatcher.repository.UserRepository;
 import com.n3t.dispatcher.service.AmbulanceService;
 import com.n3t.dispatcher.service.GoogleMapService;
+import com.n3t.dispatcher.service.UserService;
 
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider;
@@ -66,10 +68,13 @@ class DispatcherApplicationTests {
         System.out.println("time is " + a);
         System.out.println("multiple time is " + haha);
     }
+    @Autowired 
+    private UserRepository userRepository;
     @Test
     void userCanBookAnAmbulance(){
         User a = User.builder().userName("haha").build();
-        // a.setCurrentLocation(Optional.of(GeoLocation.fromLatLngToGeometryPoint(10,104)));
+        a = userRepository.save(a);
+        // sanity test, should not have any problem
         this.ambulanceService.dispatchAmbulanceToUser(a, new GeoLocation(10, 105));
     }
 

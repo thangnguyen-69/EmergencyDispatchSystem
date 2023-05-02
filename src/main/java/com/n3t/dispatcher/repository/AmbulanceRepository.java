@@ -32,6 +32,7 @@ public interface AmbulanceRepository
     List<Ambulance> findByProvider(AmbulanceProvider provider);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT * FROM public.ambulance WHERE id = :id")
+                // ok so these must be native psotgres query, because jpql query doesnt look like this and it will throw cannot parse error
+    @Query(value = "SELECT * FROM public.ambulance WHERE id = :id",nativeQuery = true)
     public Ambulance getAndLockAmbulance(@Param("id") long ambulanceId);
 }

@@ -1,7 +1,4 @@
 package com.n3t.dispatcher;
-
-import com.n3t.dispatcher.scheduled_job.N3TScheduler;
-import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -25,22 +22,5 @@ public class DemoApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
-        initializeScheduler();
-    }
-
-    private static void initializeScheduler() {
-        try {
-            N3TScheduler scheduler = DemoSpringContext.getBean(N3TScheduler.class);
-            scheduler.scheduleJobCheckETA();
-        } catch (SchedulerException se) {
-            LOGGER.error("SchedulerException occurred while initializing SchedulingManager");
-            se.printStackTrace();
-        } catch (NullPointerException npe) {
-            LOGGER.error("NullPointerException occurred while initializing SchedulingManager");
-            npe.printStackTrace();
-        } catch (Exception e) {
-            LOGGER.error("Exception occurred while initializing SchedulingManager");
-            e.printStackTrace();
-        }
     }
 }

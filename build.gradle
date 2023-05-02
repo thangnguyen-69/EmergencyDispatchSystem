@@ -17,6 +17,9 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven {
+		url 'https://maven.aliyun.com/repository/public'
+	}
 }
 
 dependencies {
@@ -46,6 +49,8 @@ dependencies {
 	implementation 'io.grpc:grpc-netty:1.54.1'
 	// https://mvnrepository.com/artifact/org.quartz-scheduler/quartz
 	implementation group: 'org.quartz-scheduler', name: 'quartz', version: '2.4.0-rc2'
+	implementation 'wisepaas.datahub:edge-sdk:1.0.2'
+
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
