@@ -22,17 +22,18 @@ public interface AmbulanceRepository
 
     @Query(value = "SELECT * FROM public.ambulance WHERE is_available = true ORDER BY ST_Distance(location, :point) LIMIT :numOfSuggestions", nativeQuery = true)
     public List<Ambulance> findNearestAvailableAmbulances(@Param("point") Geometry point,
-            @Param("numOfSuggestions") int numOfSuggestions);
+                                                          @Param("numOfSuggestions") int numOfSuggestions);
 
     @Modifying
-    @Query(value = "INSERT INTO ambulance (id, location) VALUES (:id, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography)", nativeQuery = true)
+    @Query(value = "INSERT INTO ambulance (id, location) VALUES (:id, ST_Point(:latitude, :longitude,4326)::geography)", nativeQuery = true)
     void updateAmbulanceLocation(@Param("id") Long ambulanceId, @Param("latitude") Double latitude,
-            @Param("longitude") Double longitude);
+                                 @Param("longitude") Double longitude);
 
     List<Ambulance> findByProvider(AmbulanceProvider provider);
 
+    //     https://stackoverflow.com/questions/57923047/spring-jpa-locking-concept
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-                // ok so these must be native psotgres query, because jpql query doesnt look like this and it will throw cannot parse error
-    @Query(value = "SELECT * FROM public.ambulance WHERE id = :id",nativeQuery = true)
+    // ok so these must be native psotgres query, because jpql query doesnt look like this and it will throw cannot parse error
+    @Query(value = "SELECT a FROM Ambulance a WHERE a.id = :id", nativeQuery = false)
     public Ambulance getAndLockAmbulance(@Param("id") long ambulanceId);
 }

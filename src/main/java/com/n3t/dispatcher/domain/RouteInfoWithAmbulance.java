@@ -15,9 +15,9 @@ public class RouteInfoWithAmbulance implements Comparable<RouteInfoWithAmbulance
 
     @Override
     public int compareTo(RouteInfoWithAmbulance arg0) {
-        if (this.eta < arg0.eta){
+        if (this.eta < arg0.eta) {
             return -1;
-        }else if(this.eta == arg0.eta){
+        } else if (this.eta == arg0.eta) {
             return 0;
         }
         return 1;

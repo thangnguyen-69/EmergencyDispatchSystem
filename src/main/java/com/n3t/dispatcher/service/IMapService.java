@@ -11,7 +11,7 @@ public interface IMapService {
     public Long calculateETAinSeconds(GeoLocation srcLocation, GeoLocation dstLocation);
 
     public List<Long> calculateETAFromAllAmbulancesToOnePatientinSeconds(List<GeoLocation> ambulancesLocation,
-            GeoLocation patientLocation);
+                                                                         GeoLocation patientLocation);
 
     public RouteInfoWithAmbulance calculateDistanceInMetersETAinSeconds(GeoLocation srcLocation, GeoLocation dstLocation);
 

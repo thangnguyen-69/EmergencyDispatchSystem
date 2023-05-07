@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.Specification;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -34,7 +35,7 @@ public class ETA implements Serializable {
     @Setter
     private Status status;
 
-    @Column(name = "current_timestamp", columnDefinition = "TIMESTAMP")
+    @Column(name = "time", columnDefinition = "TIMESTAMP")
     @Getter
     @Setter
     private LocalDateTime time;
@@ -47,6 +48,10 @@ public class ETA implements Serializable {
     public ETA(Emergency emergency) {
         this();
         this.emergency = emergency;
+    }
+
+    public enum Status {
+        FAILED, PENDING, SUCCESS
     }
 
     public static class Specs {
@@ -77,12 +82,5 @@ public class ETA implements Serializable {
                 return cb.equal(root.get(String.valueOf(ETA_.id)), id);
             };
         }
-    }
-
-
-    public enum Status {
-        FAILED,
-        PENDING,
-        SUCCESS
     }
 }

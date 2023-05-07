@@ -3,10 +3,8 @@ package com.n3t.dispatcher.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import org.locationtech.jts.geom.Geometry;
 
 import java.io.Serializable;
-
 
 @Entity
 @Table(name = "ambulance_user")

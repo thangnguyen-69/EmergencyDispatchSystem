@@ -21,10 +21,10 @@ import lombok.Setter;
 public class UserLocationDTO {
     @JsonProperty("userId")
     private long userId;
-    
+
     @JsonProperty("latitude")
     private double lat;
-    
-    @JsonProperty("userId")
+
+    @JsonProperty("longitude")
     private double lng;
 }

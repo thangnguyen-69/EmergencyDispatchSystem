@@ -21,7 +21,7 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder(alphabetic = true)
 public class AmbulanceDTO {
-    @JsonProperty("userId")
+    @JsonProperty("ambulanceId")
     private long ambulanceId;
 
     @JsonProperty("driverName")

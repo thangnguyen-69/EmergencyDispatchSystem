@@ -1,0 +1,35 @@
+version: "2.1"  # optional since v1.27.0
+services:
+  dispatcher:
+    container_name: dispatcher
+    build: .
+    environment:
+      - ENV=local
+      # https://www.baeldung.com/java-application-remote-debugging, for java 9 we have to add *:5005
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    command: "java -Dspring.profiles.active=$${ENV} -Djava.security.egd=file:/dev/./urandom -Djava.net.useSystemProxies=true -jar /app.jar"
+    ports:
+      - "8082:8082"
+      - "8081:8081"
+      - "5005:5005"
+    #add color to the console output
+    tty: true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  database:
+    # because name of postgres hostname is hardcoded in the application.yml, we must name it here as well
+    container_name: postgres
+    image: postgis/postgis:15-3.3
+    command: "postgres -c log_statement=all"
+    tty: true
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=eds
+    # volumes:
+    # #https://stackoverflow.com/questions/26598738/how-to-create-user-database-in-script-for-docker-postgres
+    #   - ./initialize_db.sql:/docker-entrypoint-initdb.d/initialize_db.sql
+    ports:
+      - "5432:5432" 
+
+      

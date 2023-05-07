@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: eds-database
+  labels:
+    name: eds
+spec:
+  selector:
+    role: database
+  ports:
+    # - protocol: TCP
+    - port: 5432
+      targetPort: 5432
+  type: ClusterIP

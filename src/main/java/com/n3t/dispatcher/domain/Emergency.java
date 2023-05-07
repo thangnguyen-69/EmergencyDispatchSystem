@@ -27,6 +27,7 @@ public class Emergency implements Serializable {
     private long etaToTarget;
 
     @OneToOne
+    // @JoinColumn(name = "user_id")
     private User user;
 
     @OneToOne

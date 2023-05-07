@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,13 +31,15 @@ public class EmergencyController {
 
     @Autowired
     private AmbulanceService ambulanceService;
+    @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "call", method = RequestMethod.GET)
+    @RequestMapping(value = "call", method = RequestMethod.POST)
     @ResponseBody
-    public AmbulanceDTO status(@RequestBody UserLocationDTO requestBody) throws IllegalArgumentException, RestClientException {
+    public AmbulanceDTO status(@RequestBody UserLocationDTO requestBody) throws Exception {
         User user = userService.findUserById(requestBody.getUserId()).orElseThrow();
-        Optional<Ambulance> chosenAmbulance = ambulanceService.dispatchAmbulanceToUser(user, new GeoLocation(requestBody.getLat(), requestBody.getLng()));
+        Optional<Ambulance> chosenAmbulance = ambulanceService.dispatchAmbulanceToUser(user,
+                new GeoLocation(requestBody.getLat(), requestBody.getLng()));
 
         if (chosenAmbulance.isEmpty()) {
             // https://www.baeldung.com/exception-handling-for-rest-with-spring

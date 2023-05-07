@@ -16,22 +16,26 @@ import lombok.AllArgsConstructor;
 public class GeoLocation {
     public double latitude;
     public double longitude;
-    public Point toPoint() {
+
+    public static GeoLocation fromGeometry(Geometry geom) {
+        return new GeoLocation(geom.getCoordinate().y, geom.getCoordinate().x);
+    }
+
+    public static Point fromLatLngToGeometryPoint(double latitude, double longitude) {
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
-        Coordinate coordinate = new Coordinate(latitude, longitude);
+        Coordinate coordinate = new Coordinate(longitude, latitude);
         return geometryFactory.createPoint(coordinate);
     }
+
+    public Point toPoint() {
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
+        Coordinate coordinate = new Coordinate(longitude, latitude);
+        return geometryFactory.createPoint(coordinate);
+    }
+
     public Waypoint toWaypoint() {
         return Waypoint.newBuilder()
                 .setLocation(Location.newBuilder().setLatLng(LatLng.newBuilder().setLatitude(latitude).setLongitude(longitude)))
                 .build();
-    }
-    public static GeoLocation fromGeometry(Geometry geom){
-            return new GeoLocation(geom.getCoordinate().x, geom.getCoordinate().y);
-    }
-    public static Point fromLatLngToGeometryPoint(double latitude, double longitude) {
-        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
-        Coordinate coordinate = new Coordinate(latitude, longitude);
-        return geometryFactory.createPoint(coordinate);
     }
 }
