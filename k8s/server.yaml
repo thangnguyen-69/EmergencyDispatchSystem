@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eds-server-deployment
+  labels:
+    name: eds
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      role: dispatcher-backend
+  template:
+    metadata:
+      labels:
+        role: dispatcher-backend
+    spec:
+      containers:
+        - name: java-server
+          image: thangvip5432/eds:latest
+          # we already config env in our spring .yml, lol its not really ideal
+          env:
+            - name: ENV
+              value: local
+          # env:
+          #   - name: POSTGRES_USER
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: postgres-credentials
+          #         key: username
+          #   - name: POSTGRES_PASSWORD
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: postgres-credentials
+          #         key: password
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+              ephemeral-storage: 512Mi
+            requests:
+              cpu: 80m
+              memory: 256Mi
+
+
+
+  

@@ -3,14 +3,10 @@ package com.n3t.demo;
 import com.n3t.dispatcher.DemoApplication;
 import com.n3t.dispatcher.domain.Ambulance;
 import com.n3t.dispatcher.domain.AmbulanceProvider;
-import com.n3t.dispatcher.domain.GeoLocation;
 import com.n3t.dispatcher.service.AmbulanceService;
-import com.n3t.dispatcher.service.GoogleMapService;
-
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider;
 import jakarta.transaction.Transactional;
-
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -39,6 +34,8 @@ class DispatcherApplicationTests {
         Ambulance amb2 = this.ambulanceService.registerAmbulance(provider.getId(), "29C-12346", 10.405163, 107.115757);
         Ambulance amb3 = this.ambulanceService.registerAmbulance(provider.getId(), "29C-12347", 10.407064, 107.113640);
         Ambulance amb4 = this.ambulanceService.registerAmbulance(provider.getId(), "29C-12348", 10.04, 127.012);
+        Ambulance amb5 = this.ambulanceService.registerAmbulance(provider.getId(), "29C-1234w8", 40, 40);
+        Ambulance amb6 = this.ambulanceService.registerAmbulance(provider.getId(), "29C-123s48", 50, 50);
 
         // this.ambulanceService.updateAmbulanceLocation(amb1.getId(),
         // this.ambulanceService.updateAmbulanceLocation(amb2.getId(),
@@ -52,21 +49,31 @@ class DispatcherApplicationTests {
         System.out.println("amb:     " + listAmb.get(0).getLocation().getSRID()+listAmb.get(0).getLocation().getCoordinate());
     }
 
-    @Autowired
-    private GoogleMapService googleMapService;
+    // @Autowired
+    // private GoogleMapService googleMapService;
 
-    @Test
-    void shouldBeAbleToCalculateETA() {
-        List<Long> haha = this.googleMapService.calculateETAFromAllAmbulancesToOnePatientinSeconds(
-                Arrays.asList(new GeoLocation(10.404768, 107.114562),new GeoLocation(10.405163, 107.115757)), new GeoLocation(10.407064, 107.113640));
-        Long a = this.googleMapService.calculateETAinSeconds(new GeoLocation(10.407064, 107.113640),
-                new GeoLocation(10.404768, 107.114562));
-        System.out.println("time is " + a);
-        System.out.println("multiple time is " + haha);
-    }
+    // @Test
+    // void shouldBeAbleToCalculateETA() {
+    //     List<Long> haha = this.googleMapService.calculateETAFromAllAmbulancesToOnePatientinSeconds(
+    //             Arrays.asList(new GeoLocation(10.404768, 107.114562),new GeoLocation(10.405163, 107.115757)), new GeoLocation(10.407064, 107.113640));
+    //     Long a = this.googleMapService.calculateETAinSeconds(new GeoLocation(10.407064, 107.113640),
+    //             new GeoLocation(10.404768, 107.114562));
+    //     System.out.println("time is " + a);
+    //     System.out.println("multiple time is " + haha);
+    // }
+    // @Autowired 
+    // private UserRepository userRepository;
+    // @Test
+    // void userCanBookAnAmbulance(){
+    //     User a = User.builder().userName("haha").build();
+    //     a = userRepository.save(a);
+    //     // sanity test, should not have any problem
+    //     this.ambulanceService.dispatchAmbulanceToUser(a, new GeoLocation(10, 105));
+    // }
 
     @Test
     void shouldBeAbleToAddStations() {
+
     }
 
     @Test

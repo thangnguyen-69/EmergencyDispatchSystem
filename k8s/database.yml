@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eds-database
+  labels:
+    name: eds
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      role: database
+  template:
+    metadata:
+      labels:
+        role: database
+    spec:
+      containers:
+        - name: postgres
+          image: postgis/postgis:15-3.3
+          env:
+            - name: POSTGRES_DB
+              value: eds
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: eds-secret
+                  key: postgres_username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: eds-secret
+                  key: postgres_password
+          ports:
+            - containerPort: 5432
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+              ephemeral-storage: 256Mi
+            requests:
+              cpu: 20m
+              memory: 256Mi

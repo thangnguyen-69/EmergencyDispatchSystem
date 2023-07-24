@@ -1,6 +1,11 @@
 {
     "java.configuration.updateBuildConfiguration": "automatic",
     "java.compile.nullAnalysis.mode": "automatic",
-    "java.configuration.runtimes": [],
-    "java.format.settings.url": ".vscode/java-formatter.xml"
+    // "java.configuration.runtimes": [],
+    "java.format.settings.url": ".vscode/java-formatter.xml",
+    "java.import.gradle.java.home": "/usr/lib/jvm/java-17-openjdk-amd64/",
+    "terminal.integrated.env.linux": {
+        "JAVA_HOME": "/usr/lib/jvm/java-17-openjdk-amd64/"
+    }
+
 }

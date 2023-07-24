@@ -14,6 +14,7 @@ import io.grpc.Metadata;
 import io.grpc.MethodDescriptor;
 import io.grpc.StatusRuntimeException;
 import io.grpc.netty.NettyChannelBuilder;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -22,17 +23,39 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 public class RoutesClient {
+    // private static final Logger logger =
+    // Logger.getLogger(RoutesClient.class.getName());
+    private final RoutesGrpc.RoutesBlockingStub blockingStub;
+
+    public RoutesClient(String apiKey) {
+        Channel channel = NettyChannelBuilder.forAddress("routes.googleapis.com", 443).build();
+        channel = ClientInterceptors.intercept(channel,
+                new RoutesInterceptor(apiKey));
+        blockingStub = RoutesGrpc.newBlockingStub(channel);
+    }
+
+    public Iterator<RouteMatrixElement> computeRouteMatrix(Stream<GeoLocation> ambulancesLocation,
+                                                           GeoLocation patientLocation) {
+        ComputeRouteMatrixRequest.Builder requestBuilder = ComputeRouteMatrixRequest.newBuilder();
+        Stream<RouteMatrixOrigin> listOrigins = ambulancesLocation
+                .map((geoLocation) -> RouteMatrixOrigin.newBuilder().setWaypoint(geoLocation.toWaypoint()).build());
+        ComputeRouteMatrixRequest request = requestBuilder.addAllOrigins(listOrigins.toList())
+                .addDestinations(RouteMatrixDestination.newBuilder().setWaypoint(patientLocation.toWaypoint()))
+                .setTravelMode(RouteTravelMode.DRIVE).setRoutingPreference(RoutingPreference.TRAFFIC_AWARE).build();
+        return blockingStub.withDeadlineAfter(5, TimeUnit.SECONDS).computeRouteMatrix(request);
+    }
+
     // For more detail on inserting API keys, see:
     // https://cloud.google.com/endpoints/docs/grpc/restricting-api-access-with-api-keys#java
     // For more detail on system parameters (such as FieldMask), see:
     // https://cloud.google.com/apis/docs/system-parameters
     private static final class RoutesInterceptor implements ClientInterceptor {
-        private final String apiKey;
         private static final Logger logger = Logger.getLogger(RoutesInterceptor.class.getName());
         private static Metadata.Key API_KEY_HEADER = Metadata.Key.of("x-goog-api-key",
                 Metadata.ASCII_STRING_MARSHALLER);
         private static Metadata.Key FIELD_MASK_HEADER = Metadata.Key.of("x-goog-fieldmask",
                 Metadata.ASCII_STRING_MARSHALLER);
+        private final String apiKey;
 
         public RoutesInterceptor(String apiKey) {
             this.apiKey = apiKey;
@@ -58,28 +81,6 @@ public class RoutesClient {
             };
             return call;
         }
-    }
-
-    // private static final Logger logger =
-    // Logger.getLogger(RoutesClient.class.getName());
-    private final RoutesGrpc.RoutesBlockingStub blockingStub;
-
-    public RoutesClient(String apiKey) {
-        Channel channel = NettyChannelBuilder.forAddress("routes.googleapis.com", 443).build();
-        channel = ClientInterceptors.intercept(channel,
-                new RoutesInterceptor(apiKey));
-        blockingStub = RoutesGrpc.newBlockingStub(channel);
-    }
-
-    public Iterator<RouteMatrixElement> computeRouteMatrix(List<GeoLocation> ambulancesLocation,
-            GeoLocation patientLocation) {
-        ComputeRouteMatrixRequest.Builder requestBuilder = ComputeRouteMatrixRequest.newBuilder();
-        Stream<RouteMatrixOrigin> listOrigins = ambulancesLocation.stream()
-                .map((geoLocation) -> RouteMatrixOrigin.newBuilder().setWaypoint(geoLocation.toWaypoint()).build());
-        ComputeRouteMatrixRequest request = requestBuilder.addAllOrigins(listOrigins.toList())
-                .addDestinations(RouteMatrixDestination.newBuilder().setWaypoint(patientLocation.toWaypoint()))
-                .setTravelMode(RouteTravelMode.DRIVE).setRoutingPreference(RoutingPreference.TRAFFIC_AWARE).build();
-        return blockingStub.withDeadlineAfter(5, TimeUnit.SECONDS).computeRouteMatrix(request);
     }
 
 }

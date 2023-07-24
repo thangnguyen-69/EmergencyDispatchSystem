@@ -1,4 +1,5 @@
 package com.n3t.dispatcher;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,8 +15,9 @@ public class MapConfig {
     // }
     @Value("${application.google-map.apiKey}")
     private String apiKey;
+
     @Bean
-    public RoutesClient getGoogleRoutesClient(){
+    public RoutesClient getGoogleRoutesClient() {
 
         return new RoutesClient(apiKey);
     }

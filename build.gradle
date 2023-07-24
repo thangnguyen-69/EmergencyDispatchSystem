@@ -2,11 +2,11 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.0.5'
 	id 'io.spring.dependency-management' version '1.1.0'
-	id 'org.graalvm.buildtools.native' version '0.9.20'
+	// id 'org.graalvm.buildtools.native' version '0.9.20'
 }
 
 group = 'com.n3t'
-version = '0.0.1-SNAPSHOT'
+// version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
 configurations {
@@ -17,6 +17,9 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven {
+		url 'https://maven.aliyun.com/repository/public'
+	}
 }
 
 dependencies {
@@ -26,6 +29,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	
+	// https://mvnrepository.com/artifact/org.springframework.data/spring-data-envers
+	implementation 'org.springframework.data:spring-data-envers:3.0.5'
+
 	implementation 'com.zaxxer:HikariCP:5.0.1'
 
 	// https://mvnrepository.com/artifact/org.geotools/gt-main
@@ -38,9 +45,13 @@ dependencies {
 	// https://mvnrepository.com/artifact/net.postgis/postgis-jdbc
 	// implementation group: 'net.postgis', name: 'postgis-jdbc'
 	// https://mvnrepository.com/artifact/org.postgresql/postgresql
-	implementation group: 'org.postgresql', name: 'postgresql'
+	implementation 'org.postgresql:postgresql:42.6.0'
+
 	implementation 'com.google.maps.api.grpc:grpc-google-maps-routing-v2:1.1.0'
 	implementation 'io.grpc:grpc-netty:1.54.1'
+	// https://mvnrepository.com/artifact/org.quartz-scheduler/quartz
+	implementation group: 'org.quartz-scheduler', name: 'quartz', version: '2.4.0-rc2'
+	implementation 'wisepaas.datahub:edge-sdk:1.0.2'
 
 
 	compileOnly 'org.projectlombok:lombok'
@@ -67,3 +78,6 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+// test {
+// 	maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+// }
